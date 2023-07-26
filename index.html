@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Загрузка видео</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .video-container {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    
+    .form-group {
+      margin-bottom: 10px;
+    }
+    label {
+      font-size: 20px;
+    }
+    input[type="text"] {
+      width: 63%;
+      height: 15px;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+      background-color: #000000;
+      color: white;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #000001;
+    }
+    .video-widget {
+      width: 100%;
+      height: 155px;
+      border: 0;
+    }
+    .youtube-widget {
+      width: 500px;
+      height: 281px;
+      margin: -20px auto; /* виджет от YouTube по середине */
+    }
+  </style>
+</head>
+<body>
+  <h1>Загрузка видео c YouTube</h1>
+  <div class="video-container">
+    <div class="form-group">
+      <label for="videoUrl">Ссылка на видео:</label>
+      <input type="text" id="videoUrl">
+    </div>
+    <button class="btn" onclick="loadVideo()">Найти</button>
+    
+    <div id="videoContainer"></div>
+    
+  </div>
+
+  <script>
+    function loadVideo() {
+      const videoUrl = document.getElementById('videoUrl').value;
+
+      if (videoUrl.includes('youtube')) {
+        const videoId = getYouTubeVideoId(videoUrl);
+        if (!videoId) {
+          alert('Некорректная ссылка на YouTube видео');
+          return;
+        }
+        const videoContainer = document.getElementById('videoContainer');
+        const embedUrl = `//mp4api.ytjar.info/?id=${videoId}&c=FFFFFF&b=000000&t&h=40px&cb=FFFFFF&cc=000000&br=000000`;
+        videoContainer.innerHTML = `<iframe class="video-widget" src="${embedUrl}" scrolling="no"></iframe>`;
+
+        const youtubeWidgetContainer = document.createElement('div');
+        youtubeWidgetContainer.innerHTML = `<iframe class="youtube-widget" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+        videoContainer.appendChild(youtubeWidgetContainer);
+
+        
+
+      } else {
+        alert('Некорректная ссылка на видео');
+      }
+    }
+
+    function getYouTubeVideoId(url) {
+      const regExp = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9\-_]+)/;
+      const match = url.match(regExp);
+      return match && match[1].length === 11 ? match[1] : null;
+    }
+  </script>
+</body>
+</html>
